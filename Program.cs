@@ -5,9 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-
-
-
 namespace MarketPlaceProject
 {
     /// <summary>
