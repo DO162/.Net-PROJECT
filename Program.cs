@@ -1,4 +1,4 @@
-﻿using System; // For basic system functions
+using System; // For basic system functions
 using System.Collections.Generic; // For collections
 using System.IO; // For file operations
 using System.Linq; // For LINQ operations
@@ -25,14 +25,14 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
                 new Goods(_nextId++, "LG OLED 65\"", 59999, 3, "Смартфони, ТВ та електроніка"),
 
                 // Ноутбуки та комп'ютери
-                new Goods(_nextId++, "MacBook Pro M3", 74999, 4, "Ноутбуки та комп'ютери"), // ID автоматично інкрементується
+                new Goods(_nextId++, "MacBook Pro M3", 74999, 4, "Ноутбуки та комп'ютери"), 
                 new Goods(_nextId++, "Dell XPS 15", 69999, 6, "Ноутбуки та комп'ютери"),
                 new Goods(_nextId++, "Lenovo ThinkPad", 45999, 8, "Ноутбуки та комп'ютери"),
                 new Goods(_nextId++, "HP Spectre x360", 52999, 5, "Ноутбуки та комп'ютери"),
                 new Goods(_nextId++, "Asus ROG Strix", 64999, 3, "Ноутбуки та комп'ютери"),
 
                 // Товари для геймерів
-                new Goods(_nextId++, "PlayStation 5", 20999, 3, "Товари для геймерів"), // ID автоматично інкрементується
+                new Goods(_nextId++, "PlayStation 5", 20999, 3, "Товари для геймерів"), 
                 new Goods(_nextId++, "Xbox Series X", 19999, 4, "Товари для геймерів"),
                 new Goods(_nextId++, "Nintendo Switch", 13999, 6, "Товари для геймерів"),
                 new Goods(_nextId++, "Razer Gaming Mouse", 2999, 10, "Товари для геймерів"),
@@ -78,7 +78,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
     // 4. АБСТРАКТНИЙ КЛАС
     [Serializable] // Позначає клас як серіалізований
     public abstract class ProductBase // АБСТРАКТНИЙ КЛАС ДЛЯ ПРОДУКТІВ
-    { 
+    {
         public int Id { get; protected set; } // Унікальний ідентифікатор продукту
         public string Name { get; protected set; } // Назва продукту
         public decimal Price { get; protected set; } // Ціна продукту
@@ -127,7 +127,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
         }
 
         public static bool operator !=(Goods a, Goods b) => !(a == b); // Перевантаження оператора !=
-        public override bool Equals(object obj) => obj is Goods goods && this == goods; // Переопределение метода Equals
+        public override bool Equals(object? obj) => obj is Goods goods && this == goods; // Переопределение метода Equals
         public override int GetHashCode() => Id.GetHashCode(); // Переопределение метода GetHashCode
     }
 
@@ -136,7 +136,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
     public class GoodsCollection<T> : IEnumerable<T> where T : Goods // GENERICS КОЛЕКЦІЯ
     {
         private List<T> _items = new List<T>(); // Внутрішній список товарів
-        public T this[int id] => _items.FirstOrDefault(g => g.Id == id); // Індексатор за ID
+        public T? this[int id] => _items.FirstOrDefault(g => g.Id == id); // Індексатор за ID
         public IEnumerable<T> this[string name] => _items.Where(g => g.Name.Contains(name, StringComparison.OrdinalIgnoreCase)); // Індексатор за назвою
 
         public void Add(T item) => _items.Add(item); // Метод для додавання товару
@@ -154,7 +154,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
     public class ShoppingCart // КЛАС КОРЗИНИ
     {
         private List<Goods> _items = new List<Goods>(); // Внутрішній список товарів у корзині
-        public event CartEventHandler CartChanged; // Подія зміни корзини
+        public event CartEventHandler? CartChanged; // Подія зміни корзини
         public IReadOnlyList<Goods> Items => _items.AsReadOnly(); // Властивість для отримання товарів у корзині
         public decimal TotalPrice => _items.Sum(i => i.Price * i.Quantity); // Властивість для отримання загальної вартості корзини
 
@@ -164,8 +164,10 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
                 throw new InvalidOperationException($"Недостатньо товару. Доступно: {goods.Quantity}"); // Викидаємо виключення
 
             var existing = _items.FirstOrDefault(i => i.Id == goods.Id); // Перевіряємо чи товар вже є у корзині
-            if (existing != null) existing.Quantity += quantity;    // Якщо є, збільшуємо кількість
-            else _items.Add((Goods)goods.Clone()); // Інакше додаємо новий товар
+            if (existing is not null)
+                existing.Quantity += quantity;    // Якщо є, збільшуємо кількість
+            else
+                _items.Add((Goods)goods.Clone()); // Інакше додаємо новий товар
 
             goods.Quantity -= quantity; // Зменшуємо кількість товару на складі
             OnCartChanged($"Додано: {goods.Name} x{quantity}"); // Викликаємо подію
@@ -185,7 +187,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
     // 8. SINGLETON покупець
     public sealed class Customer // SINGLETON КЛАС ПОКУПЦЯ
     {
-        private static Customer _instance; // Приватне статичне поле для зберігання єдиного екземпляра
+        private static Customer? _instance; // Приватне статичне поле для зберігання єдиного екземпляра
         public static Customer Instance => _instance ??= new Customer(); // Властивість для отримання єдиного екземпляра
 
         public string? Name { get; set; } // Властивість для імені покупця
@@ -231,10 +233,10 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
     // 10. SHOP MANAGER
     public sealed class ShopManager // SINGLETON КЛАС МЕНЕДЖЕРА МАГАЗИНУ
     {
-        private static ShopManager _instance; // Приватне статичне поле для зберігання єдиного екземпляра
+        private static ShopManager? _instance; // Приватне статичне поле для зберігання єдиного екземпляра
         public static ShopManager Instance => _instance ??= new ShopManager(); // Властивість для отримання єдиного екземпляра
         public GoodsCollection<Goods> Goods { get; } = new GoodsCollection<Goods>(); // Властивість для колекції товарів
-        public event StockEventHandler LowStockAlert; // Подія для сповіщення про низькі запаси
+        public event StockEventHandler? LowStockAlert; // Подія для сповіщення про низькі запаси
 
         private ShopManager() // Приватний конструктор
         {
@@ -243,7 +245,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
         }
 
         public void CheckStock() // Метод для перевірки запасів
-        { 
+        {
             foreach (var g in Goods.Where(g => g.Quantity <= 3)) // Перевіряємо товари з кількістю менше або рівною 3
                 LowStockAlert?.Invoke(this, $"Увага! Закінчується: {g.Name} (залишилось: {g.Quantity})"); // Викликаємо подію для кожного товару з низьким запасом
         }
@@ -393,31 +395,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
                 }
             }
         }
-        //---------------------------------------
-        /*static void ShowCatalog(ShopManager shop, Customer customer)
-        {
-            while (true)
-            {
-                UI.ShowHeader("Каталог товарів");
-
-                var groups = shop.Goods.GroupBy(g => g.Category);
-                foreach (var group in groups)
-                {
-                    Console.WriteLine($"\n📁 {group.Key}:");
-                    foreach (var g in group) UI.ShowProduct(g);
-                }
-
-                Console.WriteLine("\n0. Назад");
-                Console.WriteLine("ID товару - додати в корзину");
-
-                int id = UI.GetChoice(0, shop.Goods.Max(g => g.Id));
-                if (id == 0) break;
-
-                var product = shop.Goods[id];
-                if (product != null) AddToCart(product, customer);
-            }
-        }*/
-
+       
         static void ShowCatalog(ShopManager shop, Customer customer) // МЕНЮ КАТАЛОГУ
         {
             while (true)
@@ -451,7 +429,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
                     if (id == 0) break; // Повертаємося до вибору категорії
 
                     var product = shop.Goods[id]; // Знаходимо товар за ID
-                    if (product != null && product.Category == selectedCategory) // Перевіряємо чи товар належить вибраній категорії
+                    if (product is not null && product.Category == selectedCategory) // Перевіряємо чи товар належить вибраній категорії
                         AddToCart(product, customer); // Додаємо товар у корзину
                     else
                     {
@@ -506,43 +484,7 @@ namespace MarketPlaceProject // ІМ'Я ПРОСТОРУ ІМЕН
                 }
             }
         }
-        //---------------------------------------
-        /*static void Checkout(Customer customer)
-        {
-            if (!customer.Cart.Items.Any())
-            {
-                Console.WriteLine("Корзина порожня!");
-                return;
-            }
-
-            Console.Write("Ваше ім'я: ");
-            customer.Name = Console.ReadLine();
-
-            // Створюємо нове замовлення
-            var order = new Order(customer.Orders.Count + 1, customer.Cart.Items.ToList());
-            customer.Orders.Add(order);
-            customer.Cart.Clear();
-
-            Console.WriteLine($"\n✅ Замовлення #{order.Id} оформлено!");
-            Console.WriteLine($"💰 Сума: {order.Total} грн");
-
-            // --- Пропозиція зберегти замовлення у файл ---
-            Console.Write("Бажаєте зберегти замовлення у файл? (T - так/F - ні): ");
-            var key = Console.ReadKey();
-            Console.WriteLine();
-            if (key.Key == ConsoleKey.T)
-            {
-                FileManager.SaveLastOrder(customer);
-                Console.WriteLine("✅ Замовлення збережене у файл marketplace_data.txt");
-            }
-            else
-            {
-                Console.WriteLine("⚠️ Замовлення не збережене у файл");
-            }
-
-            Console.ReadKey();
-        }*/
-
+        
         static void Checkout(Customer customer) // МЕТОД ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
         {
             if (!customer.Cart.Items.Any())
