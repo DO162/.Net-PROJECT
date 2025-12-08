@@ -490,42 +490,6 @@ namespace MarketPlaceProject
             }
         }
         //---------------------------------------
-        /*static void Checkout(Customer customer)
-        {
-            if (!customer.Cart.Items.Any())
-            {
-                Console.WriteLine("Корзина порожня!");
-                return;
-            }
-
-            Console.Write("Ваше ім'я: ");
-            customer.Name = Console.ReadLine();
-
-            // Створюємо нове замовлення
-            var order = new Order(customer.Orders.Count + 1, customer.Cart.Items.ToList());
-            customer.Orders.Add(order);
-            customer.Cart.Clear();
-
-            Console.WriteLine($"\n✅ Замовлення #{order.Id} оформлено!");
-            Console.WriteLine($"💰 Сума: {order.Total} грн");
-
-            // --- Пропозиція зберегти замовлення у файл ---
-            Console.Write("Бажаєте зберегти замовлення у файл? (T - так/F - ні): ");
-            var key = Console.ReadKey();
-            Console.WriteLine();
-            if (key.Key == ConsoleKey.T)
-            {
-                FileManager.SaveLastOrder(customer);
-                Console.WriteLine("✅ Замовлення збережене у файл marketplace_data.txt");
-            }
-            else
-            {
-                Console.WriteLine("⚠️ Замовлення не збережене у файл");
-            }
-
-            Console.ReadKey();
-        }*/
-
         static void Checkout(Customer customer) // МЕТОД ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
         {
             if (!customer.Cart.Items.Any())
@@ -630,7 +594,7 @@ namespace MarketPlaceProject
             FileManager.SaveLastOrder(customer); // Виклик методу для збереження останнього замовлення
 
             Console.WriteLine("✅ Замовлення збережене у файл marketplace_data.txt");
-            Console.ReadKey();
+            Console.ReadKey(); // Очікування натискання клавіші
         }
 
 
