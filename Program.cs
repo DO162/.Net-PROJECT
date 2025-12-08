@@ -594,7 +594,7 @@ namespace MarketPlaceProject
             FileManager.SaveLastOrder(customer); // Виклик методу для збереження останнього замовлення
 
             Console.WriteLine("✅ Замовлення збережене у файл marketplace_data.txt");
-            Console.ReadKey(); // Очікування натискання клавіші
+            Console.ReadKey();
         }
 
 
