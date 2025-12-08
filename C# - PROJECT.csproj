@@ -14,4 +14,12 @@
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\arg50\IT STEP\LESSONS\C#\Alexbomba\.Net-PROJECT\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\arg50\IT STEP\LESSONS\C#\Alexbomba\.Net-PROJECT\.editorconfig" />
+  </ItemGroup>
+
 </Project>
